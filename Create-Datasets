@@ -1,0 +1,57 @@
+## A dataset in Data Factory can be defined as an object within the Copy Data Activity, as a separate object, or in a JSON format for programmatic creation as follows
+
+{
+    "name": "<name of dataset>",
+    "properties": {
+        "type": "<type of dataset: AzureBlob, AzureSql etc...>",
+        "linkedServiceName": {
+                "referenceName": "<name of linked service>",
+                "type": "LinkedServiceReference",
+        },
+        "schema": [
+            {
+                "name": "<Name of the column>",
+                "type": "<Name of the type>"
+            }
+        ],
+        "typeProperties": {
+            "<type specific property>": "<value>",
+            "<type specific property 2>": "<value 2>",
+        }
+    }
+}
+
+## Azure blobl example
+## 1. In your desktop, create a folder named ADFv2QuickStartPSH in your C drive.
+## 2. Create a JSON file named InputDataset.json in the C:\ADFv2QuickStartPSH folder with the following content:
+
+{
+      "name": "InputDataset",
+      "properties": {
+          "linkedServiceName": {
+              "referenceName": "AzureStorageLinkedService",
+              "type": "LinkedServiceReference"
+          },
+          "annotations": [],
+          "type": "Binary",
+          "typeProperties": {
+              "location": {
+                  "type": "AzureBlobStorageLocation",
+                  "fileName": "emp.txt",
+                  "folderPath": "input",
+                  "container": "adftutorial"
+              }
+          }
+      }
+  }
+
+  ```
+
+
+## 3.To create the dataset: InputDataset, run the Set-AzDataFactoryV2Dataset cmdlet. (in Powershell)
+Set-AzDataFactoryV2Dataset -DataFactoryName $DataFactory.DataFactoryName `
+    -ResourceGroupName $ResGrp.ResourceGroupName -Name "InputDataset" `
+    -DefinitionFile ".\InputDataset.json"
+
+## 4. Repeat the steps to create the output dataset. Create a JSON file named OutputDataset.json in the C:\ADFv2QuickStartPSH folder
+

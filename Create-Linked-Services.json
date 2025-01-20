@@ -1,0 +1,38 @@
+## The Copy Activity copies data between the source and destination
+## you can programmatically define a linked service in the JSON format to be used via REST APIs or the SDK.
+
+{
+    "name": "<Name of the linked service>",
+    "properties": {
+        "type": "<Type of the linked service>",
+        "typeProperties": {
+              "<data store or compute-specific type properties>"
+        },
+        "connectVia": {
+            "referenceName": "<name of Integration Runtime>",
+            "type": "IntegrationRuntimeReference"
+        }
+    }
+}
+
+Azure SQL Database
+{
+    "name": "AzureSqlLinkedService",
+    "properties": {
+      "type": "AzureSqlDatabase",
+      "typeProperties": {
+        "connectionString": "Server=tcp:<server-name>.database.windows.net,1433;Database=ctosqldb;User ID=ctesta-oneill;Password=P@ssw0rd;Trusted_Connection=False;Encrypt=True;Connection Timeout=30"
+      }
+    }
+  }
+
+Azure Blob Storage
+{
+    "name": "StorageLinkedService",
+    "properties": {
+      "type": "AzureStorage",
+      "typeProperties": {
+        "connectionString": "DefaultEndpointsProtocol=https;AccountName=ctostorageaccount;AccountKey=<account-key>"
+      }
+    }
+  }
