@@ -1,0 +1,45 @@
+## Execution and Control Activities. Execution (also known as Compute) activities include data movement and data transformation activities.
+
+{
+    "name": "Execution Activity Name",
+    "description": "description",
+    "type": "<ActivityType>",
+    "typeProperties":
+    {
+    },
+    "linkedServiceName": "MyLinkedService",
+    "policy":
+    {
+    },
+    "dependsOn":
+    {
+    }
+}
+
+## A Control Activity in Data Factory is defined in JSON format as follows:
+{
+    "name": "Control Activity Name",
+    "description": "description",
+    "type": "<ActivityType>",
+    "typeProperties":
+    {
+    },
+    "dependsOn":
+    {
+    }
+}
+
+## Here is how a pipeline is defined in JSON format:
+{
+    "name": "PipelineName",
+    "properties":
+    {
+        "description": "pipeline description",
+        "activities":
+        [
+        ],
+        "parameters": {
+         }
+    }
+}
+

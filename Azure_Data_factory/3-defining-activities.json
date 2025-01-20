@@ -1,0 +1,15 @@
+{
+    "name": "Execution Activity Name",
+    "description": "description",
+    "type": "<ActivityType>",
+    "typeProperties":
+    {
+    },
+    "linkedServiceName": "MyLinkedService",
+    "policy":
+    {
+    },
+    "dependsOn":
+    {
+    }
+}
