@@ -1,0 +1,10 @@
+## You can also set up a self-hosted IR on an Azure VM via an Azure Resource Manager template, or by using PowerShell
+
+## 1. Run the following command in PowerShell
+Set-AzDataFactoryV2IntegrationRuntime -ResourceGroupName $resourceGroupName -DataFactoryName $dataFactoryName -Name $selfHostedIntegrationRuntimeName -Type SelfHosted -Description "selfhosted IR description"
+
+## 2. Download and install the self-hosted integration runtime on a local machine.
+## 3. Retrieve the authentication key and register the self-hosted integration runtime with the key. Here is a PowerShell example:
+
+Get-AzDataFactoryV2IntegrationRuntimeKey -ResourceGroupName $resourceGroupName -DataFactoryName $dataFactoryName -Name $selfHostedIntegrationRuntimeName
+
