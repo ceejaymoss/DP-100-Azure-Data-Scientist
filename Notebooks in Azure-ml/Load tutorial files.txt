@@ -1,0 +1,2 @@
+# in bash terminal in an IDE
+git clone https://github.com/aislanmano/mslearn-dp100

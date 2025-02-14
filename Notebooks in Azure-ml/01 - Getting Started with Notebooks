@@ -1,0 +1,17 @@
+#imports azureml.core
+import azureml.core
+
+print("Ready to use Azure ML", azureml.core.VERSION)
+#
+# connect to workspace
+from azureml.core import Workspace
+
+ws = Workspace.from_config()
+print(ws.name, "loaded")
+#
+# Enumerates compute resources in your workspace
+print("Compute Resources:")
+for compute_name in ws.compute_targets:
+    compute = ws.compute_targets[compute_name]
+    print("\t", compute.name, ':', compute.type)
+#
