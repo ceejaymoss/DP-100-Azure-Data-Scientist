@@ -1,0 +1,29 @@
+from azureml.core import run
+import pandas as pd
+import numpy as np
+import joblib
+from sklearn.model.selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+# Get the experiment run context
+run = Run.get_context()
+
+# Prepare the dataset (diabetes training)
+diabetes = pd.read_csv('mslearn-dp100/data/diabetes.csv')
+X, y = diabetes[['Pregnancies', 'PlasmaGlucose', 'DiastolicBloodPressure', 'TricepsThickness', 'SerumInsulin', 'BMI', 'DiabetesPedigree', 'Age']].values, diabetes['Diabetic'].values
+X_train, X_test, y_train, y_test, = train_test_split(X, y, test_size=0.30)
+
+# Train a logistic regression model
+reg = 0.1
+model = LogisticRegression(C=1/reg, solver="liblinear").fit(X_train, y_train)
+
+# Calculate the accuracy of the model and log the metric
+y_hat = model.predict(X_test)
+acc = np.average(y_hat == y_test)
+run.log('Accuracy', np.float(acc))
+
+# Save the train model  
+os.makedirs('outputs', exist_ok = True)
+joblib.dump(value = model, filename = 'outputs/Diabetes_experiment.pkl')
+
+run.complete()
