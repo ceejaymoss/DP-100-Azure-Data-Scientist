@@ -9,6 +9,7 @@ ws = Workspace.from_config()
 print('Ready to use Azure ML {} to work with {}'.format(azureml.core.VERSION, ws.name))
 #
 
+#
 # Template script for Diabetes data analysis
 from azureml.core import Experiment
 import pandas as pd
@@ -62,12 +63,14 @@ run.upload_file(name='outputs/sample.csv', path_or_stream='./sample.csv')
 run.complete()
 #
 
+#
 # View run details
 from azureml.widgets import RunDetails
 
 RunDetails(run).show()
 #
 
+#
 # Retrieve experiement details using the SDK
 import json
 
@@ -84,6 +87,7 @@ for file in files:
     print(file)
 #
 
+#
 # Download all of the files into the runs output folder
 import os
 
@@ -98,6 +102,7 @@ for root, directories, filenames in os.walk(download_folder):
         print (os.path.join(root,filename))
 #
 
+#
 # Troubleshoot the experiment run
 run.get_details_with_logs()
 #
