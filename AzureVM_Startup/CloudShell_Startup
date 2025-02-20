@@ -1,0 +1,6 @@
+Set-AZVMCustomScriptExtension -ResourceGroupName rg-"name"
+    -VMname -"name"
+    -Location "location"
+    -FileUri "FileUri"
+    -Run 'Setup_env.ps1'
+    -Name DemoScriptExtension
