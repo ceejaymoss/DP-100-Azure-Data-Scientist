@@ -19,4 +19,9 @@ experiment = Experiment(workspace=ws, name='Insert Experiment name here')
 run = experiment.submit(config=script_config)
 run.wait_for_completion()
 
-
+## MODIFIED script for regrate edit
+# Load the script we want to run
+#script_config = ScriptRunConfig(source_directory='.',
+#                                script= 'Insert Training Script here',
+#                                arguements = ['reg-rate', 0.1],
+#                                environment=env)

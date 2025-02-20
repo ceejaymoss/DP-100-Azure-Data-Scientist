@@ -50,6 +50,7 @@ env.python.conda_dependencies = packages
 # Load the script we want to run
 script_config = ScriptRunConfig(source_directory='.',
                                 script= 'Insert Training Script here',
+                                arguements = ['reg-rate', 0.1],
                                 environment=env)
 
 # Run the experiment
