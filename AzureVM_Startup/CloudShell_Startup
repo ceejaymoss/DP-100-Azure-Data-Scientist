@@ -4,3 +4,15 @@ Set-AZVMCustomScriptExtension -ResourceGroupName rg-"name"
     -FileUri "FileUri"
     -Run 'Setup_env.ps1'
     -Name DemoScriptExtension
+
+
+# In VM CMD Terminal
+# setx storageconnectionstring "Insert Subscription Key" /m
+
+# Navitage to d:
+# d:
+# cd git\storage-dotnet-perf-scale-app
+# dotnet build
+# dotnet run
+
+# netsat -a | find /c "blog.https"
