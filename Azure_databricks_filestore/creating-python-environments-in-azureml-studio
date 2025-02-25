@@ -1,0 +1,41 @@
+# Run in jpyter notebooks on azure machine learning studio
+# a single hash indents a single notebook code snippet
+#
+import azureml.core
+from azureml import Workspace, Datastore 
+
+ws = Workspace.from_config()
+#
+
+#
+from azureml.core import Environment
+
+env = Environment.from_conda_specification(
+    name='dp100demo_environment_static',
+    file_path='dp100demo_1307_conda.yml')
+print(env)
+#
+
+#
+from azureml.core import Environment
+from azureml.core.conda_dependencies import CondaDependencies
+
+env = Environment('dp100demo_environment_dynamic')
+deps = CondaDependencies.create(
+    conda_packages=['scikit-learn', 'pandas', 'numpy'],
+    pip_packages=['azureml-defaults'])
+env.python.conda_dependencies = deps
+print(env)
+#
+
+#
+env.register(workspace=ws)
+#
+
+#
+from azureml.core import Environment
+
+env_names = Environment.list(workspace=ws)
+for env_name in env_names:
+    print('Name: ', env_name)
+#
