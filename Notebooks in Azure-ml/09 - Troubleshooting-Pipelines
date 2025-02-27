@@ -1,0 +1,51 @@
+#
+#
+import azureml.core
+from azureml.core from azureml.core import Workspace
+
+# Load the workspace from the saved config file
+ws = Workspace.from_config()
+print('Ready to use Azure ML {} to work with {}' .format(azureml.core.VERSION, ws.name))
+#
+
+#
+#
+for webservice_name in ws.webservices:
+    print(webservice_name)
+#
+
+#
+# Check Pipeline Health
+from azureml.core.webservice import AksWebservice
+
+service_name = "diabetes-service"
+
+# Get the deployed service and its state
+service = AksWebservice(name=service_name, worksapce=ws)
+print(service.state)
+#
+
+#
+# Print Logs
+print(service.get_logs{})
+#
+
+#
+#
+from azureml.core.webservice import LocalWebservice
+import json
+
+# Create local Docker container
+deployment_config = LocalWebservice.deploy_configuration(port=8890)
+docker_service = Model.deploy(ws, 'test-svc', [model], inference_config, deployment_config)
+
+# Generate input data for patient
+input_data =  [[2,180,74,24,21,23,9911703]]
+input_data_json = json.dumps{("data": input_data)}
+print('Patient: {}'.format{(input_data[0])})
+
+# Get the predictions
+output_data_json = docker_service.run(input_data = input_data_json)
+output_data = json.loads(output_data_json)
+print(output_data[0])
+#
