@@ -1,0 +1,157 @@
+# In terminal
+# !pip install opendp-smartnoise==0.1.2
+
+#
+# Load noise data
+import pandas as pd
+
+data_path = 'data/diabetes.csv'
+diabetes = pd.read_csv(data_path)
+diabetes.describe()
+#
+
+#
+# Perform an analysis
+import opendp.smartnoise.core as sn
+
+cols = list(diabetes.columns)
+age_range = [0.0, 120.0]
+samples = len(diabetes)
+
+with sn.Analysis() as analysis:
+    # load data
+    data = sn.Dataset(path=data_path, column_names=cols)
+    
+    # Convert Age to float
+    age_dt = sn.to_float(data['Age'])
+    
+    # get mean of age
+    age_mean = sn.dp_mean(data = age_dt,
+                          privacy_usage = {'epsilon': .50},
+                          data_lower = age_range[0],
+                          data_upper = age_range[1],
+                          data_rows = samples
+                         )
+    
+analysis.release()
+
+# print differentially private estimate of mean age
+print("Private mean age:",age_mean.value)
+
+# print actual mean age
+print("Actual mean age:",diabetes.Age.mean())
+#
+
+#
+# Explore data distribution with hsitograms
+import matplotlib.pyplot as plt
+import numpy as np
+%matplotlib inline
+
+ages = list(range(0, 130, 10))
+age = diabetes.Age
+
+# Plot a histogram with 10-year bins
+n_age, bins, patches = plt.hist(age, bins=ages, color='blue', alpha=0.7, rwidth=0.85)
+plt.grid(axis='y', alpha=0.75)
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.title('True Age Distribution')
+plt.show()
+print(n_age.astype(int))
+#
+
+#
+# differentially private histogram of age
+import matplotlib.pyplot as plt
+
+with sn.Analysis() as analysis:
+    data = sn.Dataset(path = data_path, column_names = cols)
+
+    age_histogram = sn.dp_histogram(
+            sn.to_int(data['Age'], lower=0, upper=120),
+            edges = ages,
+            upper = 10000,
+            null_value = -1,
+            privacy_usage = {'epsilon': 0.5}
+        )
+    
+analysis.release()
+
+plt.ylim([0,7000])
+width=4
+agecat_left = [x + width for x in ages]
+agecat_right = [x + 2*width for x in ages]
+plt.bar(list(range(0,120,10)), n_age, width=width, color='blue', alpha=0.7, label='True')
+plt.bar(agecat_left, age_histogram.value, width=width, color='orange', alpha=0.7, label='Private')
+plt.legend()
+plt.title('Histogram of Age')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.show()
+
+print(age_histogram.value)
+#
+
+#
+# Calculating Covariance
+with sn.Analysis() as analysis:
+    sn_data = sn.Dataset(path = data_path, column_names = cols)
+
+    age_bp_cov_scalar = sn.dp_covariance(
+                left = sn.to_float(sn_data['Age']),
+                right = sn.to_float(sn_data['DiastolicBloodPressure']),
+                privacy_usage = {'epsilon': 1.0},
+                left_lower = 0.,
+                left_upper = 120.,
+                left_rows = 10000,
+                right_lower = 0.,
+                right_upper = 150.,
+                right_rows = 10000)
+analysis.release()
+print('Differentially private covariance: {0}'.format(age_bp_cov_scalar.value[0][0]))
+print('Actual covariance', diabetes.Age.cov(diabetes.DiastolicBloodPressure))
+#
+
+#
+# Use SQL queries
+from opendp.smartnoise.metadata import CollectionMetadata
+
+meta = CollectionMetadata.from_file('metadata/diabetes.yml')
+print (meta)
+#
+
+#
+# Create a Pandas reader
+from opendp.smartnoise.sql import PandasReader, PrivateReader
+
+reader = PandasReader(diabetes, meta)
+private_reader = PrivateReader(meta, reader)
+print('Readers ready.')
+#
+
+#
+# Aggregated resultset to the private reader
+query = 'SELECT Diabetic, AVG(Age) AS AvgAge FROM diabetes.diabetes GROUP BY Diabetic'
+
+result_dp = private_reader.execute(query)
+print(result_dp)    
+#
+
+#
+# Compare the result to the same aggregation from the raw data
+result = reader.execute(query)
+print(result)
+#
+
+#
+# Customize the behaviour of the PrivateReader by specifying an explicit epsilon value
+low_privacy_reader = PrivateReader(reader, meta, 5.0)  # large epsilon, less privacy
+result = low_privacy_reader.execute(query)
+print(result)
+print()
+
+high_privacy_reader = PrivateReader(reader, meta, 0.1)  # smaller epsilon, more privacy
+result = high_privacy_reader.execute(query)
+print(result)
+#
