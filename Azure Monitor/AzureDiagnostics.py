@@ -21,6 +21,27 @@ AzureDiagnostics
     where Resource =~ "Request"
     project TimeGenerated, Resource, status_s
 #
+# Counts total logs
+AzureDiagnostics
+    summarize count()
+#
+# Creates a column chart showing succeeds and running
+AzureDiagnostics
+    summarize event_count=count() by status_s
+    render columnchart
+#
 #
 AzureDiagnostics
-    summarise count()
+    where Resource =~ "response"
+    where status_s =~ "succeeded"
+#
+#
+AzureDiagnostics
+    where Resource =~ "Response"
+    project TimeGenerated, Resource, status_s
+#
+#
+AzureDiagnostics
+    summarize count() by status_s
+#
+#
